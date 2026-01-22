@@ -47,3 +47,41 @@ class MultiHeadAttention(nn.Module):
         # 4. Projection finale
         x = self.proj(x)
         return x
+
+class PatchMerging(nn.Module):
+    """
+    Module de transition : réduit la résolution spatiale et augmente la dimension.
+    C'est ce qui crée la 'Hiérarchie' dans ton Module 3.
+    """
+    def __init__(self, dim):
+        super().__init__()
+        self.dim = dim
+        # Réduction de dimension après fusion (4*dim -> 2*dim)
+        self.reduction = nn.Linear(4 * dim, 2 * dim, bias=False)
+        self.norm = nn.LayerNorm(4 * dim)
+
+    def forward(self, x, H, W):
+        """
+        x: [Batch, H*W, Dim] (Séquence de patches)
+        H, W: Résolution actuelle de l'image
+        """
+        B, L, C = x.shape
+        assert L == H * W, "La taille de la séquence ne correspond pas à H*W"
+
+        x = x.view(B, H, W, C)
+
+        # On prend 1 pixel sur 2 pour créer 4 sous-images
+        x0 = x[:, 0::2, 0::2, :] # En haut à gauche
+        x1 = x[:, 1::2, 0::2, :] # En bas à gauche
+        x2 = x[:, 0::2, 1::2, :] # En haut à droite
+        x3 = x[:, 1::2, 1::2, :] # En bas à droite
+        
+        # On les colle ensemble (concaténation)
+        x = torch.cat([x0, x1, x2, x3], -1)  # [B, H/2, W/2, 4*C]
+        x = x.view(B, -1, 4 * C)  # Mise à plat : [B, (H/2)*(W/2), 4*C]
+
+        # Normalisation et réduction de dimension
+        x = self.norm(x)
+        x = self.reduction(x)
+
+        return x # Nouvelle dimension: [B, L/4, 2*C]
