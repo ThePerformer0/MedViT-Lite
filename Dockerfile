@@ -1,21 +1,21 @@
-# 1. Utiliser une version légère de Python
+# Utilisation d'une image Python avec support CPU/GPU léger
 FROM python:3.9-slim
 
-# 2. Installer les dépendances système pour OpenCV (indispensable sous Linux/Docker)
+# Dépendances système pour OpenCV et le traitement d'image
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# 3. Créer un dossier de travail
 WORKDIR /app
 
-# 4. Copier le fichier des dépendances et les installer
+# Installation des dépendances Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. Copier tout le reste du code
-COPY . .
+# Copie de l'architecture complète
+COPY models/ ./models/
+COPY main.py .
 
-# Commande par défaut (à adapter plus tard)
-CMD ["python", "models/module1_frame_selection.py"]
+# Commande par défaut
+CMD ["python", "main.py"]
