@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+
+# Données et Modèles (Trop lourds pour Git)
+data/
+models/checkpoints/
+*.pth
+*.onnx
+
+# IDE
+.vscode/
+.idea/
+
+# Docker & OS
+.DS_Store
+dist/
+build/

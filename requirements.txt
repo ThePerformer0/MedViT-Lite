@@ -1,0 +1,11 @@
+torch>=2.0.0
+torchvision
+opencv-python
+numpy
+matplotlib
+scikit-image
+albumentations
+tqdm
+segmentation-models-pytorch
+pytorch-grad-cam
+captum
