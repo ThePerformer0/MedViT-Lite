@@ -85,3 +85,24 @@ class PatchMerging(nn.Module):
         x = self.reduction(x)
 
         return x # Nouvelle dimension: [B, L/4, 2*C]
+    
+class MedViTBlock(nn.Module):
+    def __init__(self, dim, num_heads):
+        super().__init__()
+        self.norm1 = nn.LayerNorm(dim)
+        self.attn = MultiHeadAttention(dim, num_heads)
+        self.norm2 = nn.LayerNorm(dim)
+        
+        # Petit réseau Feed-Forward (MLP)
+        self.mlp = nn.Sequential(
+            nn.Linear(dim, 4 * dim),
+            nn.GELU(), # Activation moderne pour les Transformers
+            nn.Linear(4 * dim, dim)
+        )
+
+    def forward(self, x):
+        # Connexion résiduelle 1 (Attention)
+        x = x + self.attn(self.norm1(x))
+        # Connexion résiduelle 2 (MLP)
+        x = x + self.mlp(self.norm2(x))
+        return x
