@@ -2,7 +2,7 @@
 
 A modular PyTorch prototype of a spatio-temporal transformer pipeline for ultrasound video diagnosis, designed around computational efficiency and trustworthy predictions (attention-based explanations and uncertainty estimation).
 
-> **Status: research prototype.** The architecture and the end-to-end inference pipeline are implemented. The model has **not been trained or evaluated yet**, so no performance figures are reported. See [Status and limitations](#status-and-limitations) and the [Roadmap](#roadmap).
+> **Status: research prototype.** The architecture and the end-to-end inference pipeline are implemented. The model has **not been trained or evaluated yet**, so no performance figures are reported. See [Status and limitations](#status-and-limitations).
 
 Developed as a capstone project.
 
